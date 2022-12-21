@@ -1,0 +1,155 @@
+.mainContainer{
+    height: 100vh;
+    background: #E3EAF6;
+}
+.boxContact{
+    display: flex;
+    height: 100%;
+    width: 25rem;
+    /*border: 1px solid black;*/
+    /*background: rgb(255, 223, 223);*/
+    flex-direction: column;
+
+}
+.infoUser{
+    height: 4rem;
+    width: 100%;
+    /*background: gray;*/
+    display: flex;
+    justify-content: space-between ;
+    align-items: center;
+    width: 21rem;
+    margin-left: 2rem;
+
+}
+.userID{
+    display: flex;
+    gap: 2rem;
+    height: 2rem;
+}
+
+
+
+.listContactContainer{
+   /* background: rgb(255, 255, 255);*/
+    width: 100%;
+    /*height: 100%;*/
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+}
+.listContactBox{
+    background: rgb(255, 255, 255);
+    width: 22rem;
+    height: 85vh;
+    border-radius: 1rem;
+    -webkit-border-radius: 1rem;
+    -moz-border-radius: 1rem;
+    -ms-border-radius: 1rem;
+    -o-border-radius: 1rem;
+    display: flex;
+    flex-direction: column;
+}
+.searchBox{
+    margin-top: 1rem;
+}
+.searchBar{
+    height: 2rem;
+    width: 15rem;
+    border-radius: 1rem;
+    -webkit-border-radius: 1rem;
+    -moz-border-radius: 1rem;
+    -ms-border-radius: 1rem;
+    -o-border-radius: 1rem;
+    background: #dfdfdf;
+    border: none;
+    padding-left: 1rem;
+}
+.searchBar:focus{
+    outline: none;
+}
+
+.listContact{
+    margin-top: 1rem;
+    height: 78vh;
+    /*background: beige;*/
+    border-radius: 1rem;
+    overflow-y: auto;
+    display: flex;
+    padding: 0
+    ;
+}
+
+.listContact::-webkit-scrollbar{
+    display: none;
+}
+
+.listCard{
+    
+    list-style: none;
+    padding: 0;
+    /*overflow-y: auto;*/
+    width: 100%;
+    margin: 0;
+
+}
+
+.cardItem
+{
+    
+    /*background: bisque;*/
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    height: 4rem;
+}
+._active{
+    background: #e1e1e1 !important;
+}
+
+.picProfilBox{
+    display: flex;
+    align-items: center;
+}
+
+.picProfil{
+    width: 2.5rem;
+    height: 2.5rem;
+    object-fit: cover;
+    border-radius: 2rem;
+    -webkit-border-radius: 2rem;
+    -moz-border-radius: 2rem;
+    -ms-border-radius: 2rem;
+    -o-border-radius: 2rem;
+}
+
+.icoNotif{
+    width: 1.5rem;
+}
+
+.infoMessage{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    /*justify-content: center;*/
+}
+
+.dataMessage{
+
+}
+
+.nbNotifBox{
+    background: #ff0000;
+    color: #ffffff;
+    width: 1.5rem;
+    height: 1.5rem;
+    border-radius: 1rem;
+    text-align: center;
+    
+    display: flex;
+    justify-content: center;
+}
+
+.nbNotif{}
+
