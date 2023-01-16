@@ -27,6 +27,13 @@
 
 }
 
+.UserName {
+    display: flex;
+    align-items: center;
+}
+
+
+
 .userID {
     display: flex;
     gap: 2rem;
@@ -310,6 +317,7 @@
 }
 
 .btn_emote {
+    background: none;
     width: 2.2rem;
     height: 2.2rem;
     display: flex;
@@ -318,22 +326,37 @@
 }
 
 .btn_send {
+    background: none;
     width: 2.2rem;
     height: 2.2rem;
 }
 
 .btn_pin {
+    background: none;
     width: 2.2rem;
     height: 2.2rem;
 }
 
 .btn_Sender {
+    background: none;
     /*background: none;*/
     display: flex;
     justify-content: center;
     align-items: center;
     /* border: 0.1rem solid;*/
     border-radius: 2rem;
+}
+
+.btn_CallBtn{
+    background: none;
+    border:none;
+    filter: invert(31%) sepia(22%) saturate(318%) hue-rotate(180deg) brightness(98%) contrast(88%);
+}
+
+.btn_more{
+    background: none;
+    border:none;
+    filter: invert(31%) sepia(22%) saturate(318%) hue-rotate(180deg) brightness(98%) contrast(88%);
 }
 
 .icoPin {
@@ -349,6 +372,13 @@
     background: none;
 }
 
+.icoCall {
+    width: 1.7rem;
+    background: none;
+}
+.icoMore {
+    width: 1.7rem;
+}
 
 /*############################*/
 /*############################*/

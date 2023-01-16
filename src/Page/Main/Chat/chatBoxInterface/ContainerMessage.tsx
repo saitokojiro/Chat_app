@@ -6,10 +6,13 @@ import { useParams } from "react-router-dom";
 import send_ico from "./../../../img/send_icon.svg";
 import pin_ico from "./../../../img/pin_icon.svg";
 import smiley_ico from "./../../../img/smiley_icon.svg";
+import phone_ico from "./../../../img/phone_icon.svg";
+import threedote from "./../../../img/three_dote_icon.svg";
 
 import contactList from "./../contactList.json";
 import messageList from "./../messageList.json";
 import { wsContext } from "../../../../context/websocket";
+import { callbackify } from "util";
 
 export const ContainerMessage = () => {
   let parmsData: any = useParams();
@@ -161,10 +164,10 @@ export const ContainerMessage = () => {
             <div>{userId.name}</div>
             {/*<div>NameData</div>*/}
           </div>
+          
           <div className={style.headerIcoUser}>
-            <button>Ico</button>
-            <button>Ico</button>
-            <button>ICO</button>
+            <button className={style.btn_CallBtn} onClick={(e)=>{soonMessage()}}><img src={phone_ico} alt="" className={style.icoCall}/></button>
+            <button className={style.btn_more} onClick={(e)=>{soonMessage()}}><img src={threedote} alt="" className={style.icoMore}/></button>
           </div>
         </div>
       </div>
