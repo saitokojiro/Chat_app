@@ -1,105 +1,95 @@
-import React from "react";
+import React, { useContext, useState , useLayoutEffect } from "react";
+//import React, { useContext, useState, useEffect, useReducer, useLayoutEffect } from "react";
 import style from "./Chat.module.css";
 import notif_ico from "./../../img/notification-bell.svg";
+/*
 import send_ico from "./../../img/send_icon.svg";
 import pin_ico from "./../../img/pin_icon.svg";
-import smiley_ico from "./../../img/smiley_icon.svg";
+import smiley_ico from "./../../img/smiley_icon.svg";*/
 import { useParams } from "react-router-dom";
-import { ContactCard } from "./friendList";
+import { FriendList } from "./FriendList";
 import { ContainerMessage } from "./chatBoxInterface/ContainerMessage";
-
+import { wsContext } from "../../../context/websocket";
+/*
 import contactList from "./contactList.json";
 import messageList from "./messageList.json";
-
+*/
 let alertNotif = () => {
   alert("coming soon");
 };
 
-let findUser = (uid: Number) => {
-  //console.log(typeof(uid))
-  return contactList.find((el: any) => el.id === uid);
-};
-
-let ShowMessage = (props: any) => {
-  console.log(props.id);
-  let data: any = messageList.map((el: any, key: any) => {
-    if (el.id === parseInt(props.id)) {
-      return (
-        <div className={style.ownMessage + " " + style.msgBox} key={key}>
-          <div className={style.msg}>{el.message}</div>
-        </div>
-      );
-    } else {
-      return (
-        <div className={style.friendMessage + " " + style.msgBox} key={key}>
-          <div className={style.msg}>{el.message}</div>
-        </div>
-      );
-    }
-  });
-  return data;
-};
-
-let ContainerMessages = () => {
-  let parmsData = useParams();
-  console.log(parmsData);
-  if (parmsData.id === undefined) {
-    return (
-      <div>
-        <span>not found user</span>
-      </div>
-    );
-  }
-  let userId: any = findUser(parseInt(parmsData.id));
-
-  console.log(userId);
-  return (
-    <div className={style.ChatBox}>
-      <div className={style.headerChat}>
-        <div className={style.headerChatInfo}>
-          <div className={style.headerNameUser}>
-            <div className={style.picProfilBox}>
-              <img src="https://picsum.photos/600/300" className={style.picProfil} alt="" />
-            </div>
-            <div>{userId.name}</div>
-            {/*<div>NameData</div>*/}
-          </div>
-          <div className={style.headerIcoUser}>
-            <button>Ico</button>
-            <button>Ico</button>
-            <button>ICO</button>
-          </div>
-        </div>
-      </div>
-      <div className={style.messageContent}>
-        <ShowMessage id={"129074"} />
-      </div>
-      <div className={style.inputMessage}>
-        <button className={style.btn_radius + " " + style.btn_bg + " " + style.btn_pin}>
-          <img src={pin_ico} alt="send_btn" className={style.icoPin} />
-        </button>
-        <div className={style.inputBox}>
-          <input type="text" className={style.inputBarre} />
-        </div>
-        <div className={style.btn_group}>
-          <button className={style.btn_emote + " " + style.btn_radius + " " + style.btn_bg}>
-            <img src={smiley_ico} alt="smiley_btn" className={style.icoSmiley} />
-          </button>
-          <button
-            className={style.btn_send + " " + style.btn_Sender + " " + style.btn_bg}
-            onClick={(e) => {
-              console.log("ok");
-            }}
-          >
-            <img src={send_ico} alt="send_btn" className={style.icoSend} />
-          </button>
-        </div>
-      </div>
-    </div>
-  );
-};
-
 export const Chat = (props: any) => {
+  let ws = useContext(wsContext);
+  let parmsData: any = useParams();
+  let nameUser = localStorage.getItem("c_name");
+
+
+  const [getMessage, setgetMessage] = useState<any>([]);
+  const [getUser, setgetUser] = useState<any>([]);
+  //const [state, dispatch] = useReducer(reducer, usinitialState);
+
+  // useEffect(() => {
+  useLayoutEffect(() => {
+    
+    ws.onmessage = (event: any) => {
+      let contentJson = JSON.parse(event.data);
+      //console.log(contentJson);
+      //console.log(parseInt(parmsData.id));
+      console.log();
+      console.log(contentJson.type);
+      if (contentJson.type === "private message") {
+        console.log(contentJson.id);
+        console.log( typeof(contentJson.id));
+        console.log(typeof(parmsData.id));
+        console.log(contentJson.id === parmsData.id)
+        if (contentJson.id === parmsData.id) {
+          
+          
+          let msgWS: {} = {
+            id: contentJson.id,
+            message: contentJson.message,
+            isMedia: contentJson.isMedia,
+            typeMedia: contentJson.typeMedia,
+            media: contentJson.media,
+            date: contentJson.date
+          };
+          //setgetMessage([...getMessage, msgWS]);
+          setgetMessage((prevState: any) => prevState.concat(msgWS));
+          
+          console.log("send")
+        }
+      } else if (contentJson?.cat === "userlist") {
+        console.log(contentJson.list);
+        let temporis: any[] = [];
+        //let connectedUsers = contentJson.list;
+        // eslint-disable-next-line array-callback-return
+        contentJson.list.some((el: any) => {
+          //console.log(el.user)
+
+          let tempFriend: any = {
+            id: el.user,
+            img: "https://picsum.photos/600/300",
+            name: el.user,
+            message: "lorem ipsum",
+            hours: "10:20",
+            hasNotification: false,
+            notification: 0
+          };
+          temporis.push(tempFriend);
+          //setgetUser([...getUser,tempFriend])
+          if (!getUser.find((user: any) => user.id === tempFriend.id)) {
+            setgetUser((prevState: any) => prevState.concat(tempFriend));
+          }
+        });
+
+        //console.log(tempFriend)*/
+      } else if (contentJson?.cat === "disconnect") {
+        setgetUser((prevState: any) => prevState.filter((user: any) => contentJson.list.some((userId: any) => user.id === userId.user)));
+      }
+    };
+  });
+  
+  
   return (
     <div className={style.mainContainer}>
       <div className={style.boxContact}>
@@ -108,7 +98,7 @@ export const Chat = (props: any) => {
             <div className={style.picProfilBox}>
               <img src="https://picsum.photos/600/300" alt="" className={style.picProfil} />
             </div>
-            <div>Lorem ipsum</div>
+            <div className={style.UserName}>{nameUser}</div>
           </div>
           <div
             className={style.notificationBell}
@@ -125,15 +115,17 @@ export const Chat = (props: any) => {
               <input type="text" className={style.searchBar} />
             </div>
             <div className={style.listContact}>
-              <ul className={style.listCard}>
-                <ContactCard />
-              </ul>
+              {/*<FriendList ws={ws} Flist={state.userlist} />*/}
+              <FriendList ws={ws} Flist={getUser} />
+              {/*<ul className={style.listCard}>
+                <FriendList />
+          </ul>*/}
             </div>
           </div>
         </div>
       </div>
       <div className={style.contentChat}>
-        <ContainerMessage />
+        <ContainerMessage ws={ws} historyMSG={getMessage}  Flist={getUser} />
       </div>
     </div>
   );

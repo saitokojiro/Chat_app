@@ -1,4 +1,5 @@
-import React, { useContext, useState, useEffect } from "react";
+import React, { useState } from "react";
+//import React, { useContext, useState, useEffect } from "react";
 import style from "./../Chat.module.css";
 import { useParams } from "react-router-dom";
 
@@ -8,18 +9,20 @@ import pin_ico from "./../../../img/pin_icon.svg";
 import smiley_ico from "./../../../img/smiley_icon.svg";
 import phone_ico from "./../../../img/phone_icon.svg";
 import threedote from "./../../../img/three_dote_icon.svg";
-
+/*
 import contactList from "./../contactList.json";
 import messageList from "./../messageList.json";
 import { wsContext } from "../../../../context/websocket";
-import { callbackify } from "util";
-
-export const ContainerMessage = () => {
+*/
+export const ContainerMessage = (props:{ws:any,historyMSG : any,Flist:any}) => {
+  let ws = props.ws
   let parmsData: any = useParams();
-  const ws = useContext(wsContext);
-  const [getMessage, setgetMessage] = useState<any>([...messageList]);
+  let messageList = props.historyMSG;
+  const [getMessage, setgetMessage] = useState<any>([]);
+  let ProContactList = props.Flist;
   const [messageState, setmessageState] = useState<ISMessage>({
     id: "",
+    sender:"",
     message: "",
     isMedia: false,
     typeMedia: "",
@@ -27,53 +30,42 @@ export const ContainerMessage = () => {
     date: ""
   });
 
-  let findUser = (uid: Number) => {
-    return contactList.find((el: any) => el.id === uid);
+  let findUser = (uid: any) => {
+    return ProContactList.find((el: any) => el.id === uid);
   };
-
-  useEffect(() => {
-    ws.onmessage = (event: any) => {
-      let contentJson = JSON.parse(event.data);
-      console.log(contentJson);
-      console.log(parseInt(parmsData.id));
-      if (contentJson.id === parseInt(parmsData.id)) {
-        let msgWS: {} = {
-          id: contentJson.id,
-          message: contentJson.message,
-          isMedia: contentJson.isMedia,
-          typeMedia: contentJson.typeMedia,
-          media: contentJson.media,
-          date: contentJson.date
-        };
-        setgetMessage([...getMessage, msgWS]);
-      }
-    };
-  });
+  
 
   let ShowMessage = (props: any) => {
-    let userId: any = localStorage.getItem("c_user");
-    let convertUserId: Number = parseInt(userId);
+    let userId: any = localStorage.getItem("c_name");
+    let convertUserId:any = userId;
 
-    let data: any = getMessage.map((el: any, key: any) => {
-      if (el.id === convertUserId) {
-        return (
-          <div key={key}>
-            <div className={style.ownMessage + " " + style.msgBox}>
-              <div className={style.msg}>{el.message}</div>
+    // eslint-disable-next-line array-callback-return
+    let data: any = messageList.map((el: any, key: any)=>{
+      console.log(el.sender)
+      console.log(convertUserId)
+      if(parmsData.id === el.id)
+      {
+        if (el?.sender === convertUserId) {
+          return (
+            <div key={key}>
+              <div className={style.ownMessage + " " + style.msgBox}>
+                <div className={style.msg}>{el.message}</div>
+              </div>
+              <div className={style.date}>{el.date}</div>
             </div>
-            <div className={style.date}>{el.date}</div>
-          </div>
-        );
-      } else {
-        return (
-          <div key={key}>
-            <div className={style.friendMessage + " " + style.msgBox} key={key}>
-              <div className={style.msg}>{el.message}</div>
+          );
+        } else {
+          return (
+            <div key={key}>
+              <div className={style.friendMessage + " " + style.msgBox} key={key}>
+                <div className={style.msg}>{el.message}</div>
+              </div>
+              <div className={style.dateFriend}>{el.date}</div>
             </div>
-            <div className={style.dateFriend}>{el.date}</div>
-          </div>
-        );
+          );
+        }
       }
+      
     });
     return data;
   };
@@ -86,26 +78,33 @@ export const ContainerMessage = () => {
       </div>
     );
   }
-  let userId: any = findUser(parseInt(parmsData.id));
+  let ParamUrl = parmsData.id
+  let strData = ParamUrl.toString()
+  let userId: any = findUser(strData);
 
   interface ISMessage {
     id: any;
+    sender : any;
     message: string;
     isMedia: boolean;
     typeMedia: any;
     media: string;
     date: string;
   }
-  let userid: any = localStorage.getItem("c_user");
-  let useridConver: Number = parseInt(userid);
-  console.log(useridConver);
+  //let userid: any = localStorage.getItem("c_user");
+  let userid: any = localStorage.getItem("c_name");
+  //let useridConver: Number = parseInt(userid);
+  //console.log(userid)
+  let useridConver:any = userid;
+  //console.log(useridConver);
   let templateMessage: any = (msg: ISMessage) => {
     let idMessage: any = parmsData.id;
-    let idMsgConv = parseInt(idMessage);
+    let idMsgConv = idMessage;
     console.log(idMsgConv);
     let template = {
       type: "private message",
       to: idMsgConv,
+      sender: idMsgConv,
       id: useridConver,
       message: msg.message,
       isMedia: msg.isMedia,
@@ -136,11 +135,12 @@ export const ContainerMessage = () => {
   };
 
   let handleChange = (event: any) => {
-    let data: any = localStorage.getItem("c_user");
-    let convert: Number = parseInt(data);
+    let data: any = localStorage.getItem("c_name");
+    let convert = data;
 
     setmessageState({
-      id: convert,
+      id: parmsData.id,
+      sender:convert,
       message: event.target.value,
       isMedia: false,
       typeMedia: null,
@@ -152,7 +152,9 @@ export const ContainerMessage = () => {
   let soonMessage = () => {
     alert("soon");
   };
-
+//console.log("----------")
+//console.log(userId?.name)
+//console.log("----------")
   return (
     <div className={style.ChatBox}>
       <div className={style.headerChat}>
@@ -161,7 +163,7 @@ export const ContainerMessage = () => {
             <div className={style.picProfilBox}>
               <img src="https://picsum.photos/600/300" className={style.picProfil} alt="" />
             </div>
-            <div>{userId.name}</div>
+            <div>{userId?.name}</div>
             {/*<div>NameData</div>*/}
           </div>
           

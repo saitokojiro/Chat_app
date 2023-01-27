@@ -7,7 +7,9 @@ const options = {
     maxRetries: 10,
 };
   
+let userID:any = localStorage.getItem("c_userId")
+let name:any = localStorage.getItem("c_name") 
 
-//export const wsSocket = new WebSocket("ws://127.0.0.1:3987/?token="+localStorage.getItem("c_user"));
-export const wsSocket = new ReconnectingWebSocket("ws://127.0.0.1:3987/?token="+localStorage.getItem("c_user"),[],options);
+//lt --local-host 127.0.0.1 --subdomain saitokojiro --port 3987
+export const wsSocket = new ReconnectingWebSocket("ws://saitokojiro.loca.lt/?token="+userID+"&user="+name,[],options);
 export const wsContext = React.createContext(wsSocket);
