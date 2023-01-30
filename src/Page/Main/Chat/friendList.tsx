@@ -32,7 +32,7 @@ export const FriendList = (props:{ws:any, Flist:any}) => {
             IsSelected(e, el);
           }}
         >
-          <Link className={style.linkCard + " " + style.cardLinkBox} to={"/" + el.id}>
+          <Link className={style.linkCard + " " + style.cardLinkBox} to={"/message/" + el.id}>
             <div className={style.cardLinkBox}>
               <div className={style.userFriendID}>
                 <div className={style.picProfilBox}>
