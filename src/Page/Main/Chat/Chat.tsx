@@ -38,6 +38,7 @@ export const Chat = (props: any) => {
       console.log();
       console.log(contentJson.type);
       if (contentJson.type === "private message") {
+        console.log(contentJson);
         console.log(contentJson.id);
         console.log( typeof(contentJson.id));
         console.log(typeof(parmsData.id));
@@ -60,14 +61,16 @@ export const Chat = (props: any) => {
         }
       } else if (contentJson?.cat === "userlist") {
         console.log(contentJson.list);
+        console.log(contentJson);
+
         let temporis: any[] = [];
         //let connectedUsers = contentJson.list;
         // eslint-disable-next-line array-callback-return
         contentJson.list.some((el: any) => {
           //console.log(el.user)
-
+          console.log(el)
           let tempFriend: any = {
-            id: el.user,
+            id: el.id_User,
             img: "https://picsum.photos/600/300",
             name: el.user,
             message: "lorem ipsum",

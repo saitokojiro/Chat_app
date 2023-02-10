@@ -8,7 +8,7 @@ import { wsContext, wsSocket } from "./context/websocket";
 import Home from "./Page/Main/Home/Home";
 
 const isExistStorage = () => {
-  let c_userID: any = localStorage.getItem("c_userId");
+  let c_userID: any = localStorage.getItem("id_User");
   let c_name: any = localStorage.getItem("c_name");
   
   if (c_userID !== null && c_name != null) return true;

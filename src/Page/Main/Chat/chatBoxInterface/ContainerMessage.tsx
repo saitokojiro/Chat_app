@@ -92,7 +92,7 @@ export const ContainerMessage = (props:{ws:any,historyMSG : any,Flist:any}) => {
     date: string;
   }
   //let userid: any = localStorage.getItem("c_user");
-  let userid: any = localStorage.getItem("c_name");
+  let userid: any = localStorage.getItem("id_User");
   //let useridConver: Number = parseInt(userid);
   //console.log(userid)
   let useridConver:any = userid;
