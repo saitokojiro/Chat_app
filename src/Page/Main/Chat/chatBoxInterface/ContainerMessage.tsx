@@ -34,6 +34,14 @@ export const ContainerMessage = (props:{ws:any,historyMSG : any,Flist:any}) => {
     return ProContactList.find((el: any) => el.id === uid);
   };
   
+  function unEscape(htmlStr:string) {
+    htmlStr = htmlStr.replace(/&lt;/g , "<");	 
+    htmlStr = htmlStr.replace(/&gt;/g , ">");     
+    //htmlStr = htmlStr.replace(/&quot;/g , "\"");  
+    //htmlStr = htmlStr.replace(/&#39;/g , "\'");   
+    htmlStr = htmlStr.replace(/&amp;/g , "&");
+    return htmlStr;
+}
 
   let ShowMessage = (props: any) => {
     let userId: any = localStorage.getItem("c_name");
@@ -43,6 +51,7 @@ export const ContainerMessage = (props:{ws:any,historyMSG : any,Flist:any}) => {
     let data: any = messageList.map((el: any, key: any)=>{
       console.log(el.sender)
       console.log(convertUserId)
+      let messageUnEscape = unEscape(el.message)
       if(parmsData.id === el.id)
       {
         if (el?.sender === convertUserId) {
@@ -58,7 +67,7 @@ export const ContainerMessage = (props:{ws:any,historyMSG : any,Flist:any}) => {
           return (
             <div key={key}>
               <div className={style.friendMessage + " " + style.msgBox} key={key}>
-                <div className={style.msg}>{el.message}</div>
+                <div className={style.msg}>{messageUnEscape}</div>
               </div>
               <div className={style.dateFriend}>{el.date}</div>
             </div>
@@ -131,11 +140,22 @@ export const ContainerMessage = (props:{ws:any,historyMSG : any,Flist:any}) => {
       messageList.push(messageState);
       setgetMessage([...getMessage, messageState]);
       ws.send(JSON.stringify(templateMessage(messageState)));
+      setmessageState({
+        id: "",
+        sender:"",
+        message: "",
+        isMedia: false,
+        typeMedia: null,
+        media: "",
+        date: ""
+      })
     }
   };
 
   let handleChange = (event: any) => {
     let data: any = localStorage.getItem("c_name");
+    let dateTime = new Date();
+     
     let convert = data;
 
     setmessageState({
@@ -145,7 +165,7 @@ export const ContainerMessage = (props:{ws:any,historyMSG : any,Flist:any}) => {
       isMedia: false,
       typeMedia: null,
       media: "",
-      date: "12:20"
+      date: dateTime.toLocaleString()
     });
   };
 

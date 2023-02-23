@@ -162,6 +162,14 @@
     -o-border-radius: 2rem;
 }
 
+.grp_ico{
+    display: flex;
+    gap: 1rem;
+}
+.icoLogout{
+    width: 1.5rem;
+}
+
 .icoNotif {
     width: 1.5rem;
 }
@@ -257,6 +265,7 @@
     width: 92%;
     /*background: #bbd2fa;*/
     padding-top: 1rem;
+    overflow: auto;
 }
 
 .inputMessage {

@@ -2,6 +2,7 @@ import React, { useContext, useState , useLayoutEffect } from "react";
 //import React, { useContext, useState, useEffect, useReducer, useLayoutEffect } from "react";
 import style from "./Chat.module.css";
 import notif_ico from "./../../img/notification-bell.svg";
+import logout from "./../../img/logout-svgrepo-com.svg";
 /*
 import send_ico from "./../../img/send_icon.svg";
 import pin_ico from "./../../img/pin_icon.svg";
@@ -91,6 +92,23 @@ export const Chat = (props: any) => {
       }
     };
   });
+
+  let btn_logout =()=>{
+    localStorage.removeItem("c_name");
+    localStorage.removeItem("id_User");
+    fetch(process.env.REACT_APP_API_HTTP_WEBSOCKET_ADDRESS+"/logout",{
+      method:"GET",
+      credentials: 'include'
+    })
+      .then((response) => response.json())
+      .then((result) => {
+        console.log(result)
+        console.log(result.redirect)
+        window.location.href = window.location.origin + "/";
+      })
+      .catch((error) => console.log("error", error));
+
+  }
   
   
   return (
@@ -103,6 +121,7 @@ export const Chat = (props: any) => {
             </div>
             <div className={style.UserName}>{nameUser}</div>
           </div>
+          <div className={style.grp_ico}>
           <div
             className={style.notificationBell}
             onClick={(e) => {
@@ -110,6 +129,15 @@ export const Chat = (props: any) => {
             }}
           >
             <img src={notif_ico} alt="bell" className={style.icoNotif} />
+          </div>
+          <div
+            className={style.logoutIcoContainer}
+            onClick={(e) => {
+              btn_logout();
+            }}
+          >
+            <img src={logout} alt="logout" className={style.icoLogout} />
+          </div>
           </div>
         </div>
         <div className={style.listContactContainer}>
