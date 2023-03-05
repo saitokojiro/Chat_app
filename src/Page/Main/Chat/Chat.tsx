@@ -29,6 +29,61 @@ export const Chat = (props: any) => {
   const [getUser, setgetUser] = useState<any>([]);
   //const [state, dispatch] = useReducer(reducer, usinitialState);
 
+
+  let handlePrivateMessage = (contentJson: any) => {
+    if (contentJson.id === parmsData.id) {
+      let msgWS: {} = {
+        id: contentJson.id,
+        message: contentJson.message,
+        isMedia: contentJson.isMedia,
+        typeMedia: contentJson.typeMedia,
+        media: contentJson.media,
+        date: contentJson.date
+      };
+      setgetMessage((prevState: any) => prevState.concat(msgWS));
+    }
+  };
+
+  let handleUserList = (contentJson: any) => {
+    let temporis: any[] = [];
+    contentJson.list.some((el: any) => {
+      console.log(el)
+      let tempFriend: any = {
+        id: el.id_User,
+        img: "https://picsum.photos/600/300",
+        name: el.user,
+        message: "lorem ipsum",
+        hours: "10:20",
+        hasNotification: false,
+        notification: 0
+      };
+      temporis.push(tempFriend);
+      console.log(tempFriend)
+      if (!getUser.find((user: any) => user.id === tempFriend.id)) {
+        setgetUser((prevState: any) => prevState.concat(tempFriend));
+      }
+      return 0;
+    });
+  };
+
+  let handleDisconnect = (contentJson: any) => {
+    setgetUser((prevState: any) => prevState.filter((user: any) => contentJson.list.some((userId: any) => user.id === userId.user)));
+  };
+
+  const handlers: any = {
+    "private message": handlePrivateMessage,
+    userlist: handleUserList,
+    disconnect: handleDisconnect
+  };
+
+  let handleEvent = (contentJson: any, parmsData: any, getMessage: any, setgetMessage: any, getUser: any, setgetUser: any) => {
+    const handler: any = handlers[contentJson.type || contentJson.cat];
+    if (handler) {
+      handler(contentJson);
+    }
+  };
+
+
   // useEffect(() => {
   useLayoutEffect(() => {
     
@@ -36,60 +91,7 @@ export const Chat = (props: any) => {
       let contentJson = JSON.parse(event.data);
       //console.log(contentJson);
       //console.log(parseInt(parmsData.id));
-      console.log();
-      console.log(contentJson.type);
-      if (contentJson.type === "private message") {
-        console.log(contentJson);
-        console.log(contentJson.id);
-        console.log( typeof(contentJson.id));
-        console.log(typeof(parmsData.id));
-        console.log(contentJson.id === parmsData.id)
-        if (contentJson.id === parmsData.id) {
-          
-          
-          let msgWS: {} = {
-            id: contentJson.id,
-            message: contentJson.message,
-            isMedia: contentJson.isMedia,
-            typeMedia: contentJson.typeMedia,
-            media: contentJson.media,
-            date: contentJson.date
-          };
-          //setgetMessage([...getMessage, msgWS]);
-          setgetMessage((prevState: any) => prevState.concat(msgWS));
-          
-          console.log("send")
-        }
-      } else if (contentJson?.cat === "userlist") {
-        console.log(contentJson.list);
-        console.log(contentJson);
-
-        let temporis: any[] = [];
-        //let connectedUsers = contentJson.list;
-        // eslint-disable-next-line array-callback-return
-        contentJson.list.some((el: any) => {
-          //console.log(el.user)
-          console.log(el)
-          let tempFriend: any = {
-            id: el.id_User,
-            img: "https://picsum.photos/600/300",
-            name: el.user,
-            message: "lorem ipsum",
-            hours: "10:20",
-            hasNotification: false,
-            notification: 0
-          };
-          temporis.push(tempFriend);
-          //setgetUser([...getUser,tempFriend])
-          if (!getUser.find((user: any) => user.id === tempFriend.id)) {
-            setgetUser((prevState: any) => prevState.concat(tempFriend));
-          }
-        });
-
-        //console.log(tempFriend)*/
-      } else if (contentJson?.cat === "disconnect") {
-        setgetUser((prevState: any) => prevState.filter((user: any) => contentJson.list.some((userId: any) => user.id === userId.user)));
-      }
+      handleEvent(contentJson,parmsData,getMessage,setgetMessage,getUser,setgetUser)
     };
   });
 
