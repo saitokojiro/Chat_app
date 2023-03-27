@@ -1,4 +1,4 @@
-import React, { useContext, useState , useLayoutEffect } from "react";
+import React, { useContext, useState, useLayoutEffect } from "react";
 //import React, { useContext, useState, useEffect, useReducer, useLayoutEffect } from "react";
 import style from "./Chat.module.css";
 import notif_ico from "./../../img/notification-bell.svg";
@@ -8,7 +8,7 @@ import send_ico from "./../../img/send_icon.svg";
 import pin_ico from "./../../img/pin_icon.svg";
 import smiley_ico from "./../../img/smiley_icon.svg";*/
 import { useParams } from "react-router-dom";
-import { FriendList } from "./FriendList";
+import { FriendList } from "./friendList";
 import { ContainerMessage } from "./chatBoxInterface/ContainerMessage";
 import { wsContext } from "../../../context/websocket";
 /*
@@ -86,20 +86,20 @@ export const Chat = (props: any) => {
 
   // useEffect(() => {
   useLayoutEffect(() => {
-    
+
     ws.onmessage = (event: any) => {
       let contentJson = JSON.parse(event.data);
       //console.log(contentJson);
       //console.log(parseInt(parmsData.id));
-      handleEvent(contentJson,parmsData,getMessage,setgetMessage,getUser,setgetUser)
+      handleEvent(contentJson, parmsData, getMessage, setgetMessage, getUser, setgetUser)
     };
   });
 
-  let btn_logout =()=>{
+  let btn_logout = () => {
     localStorage.removeItem("c_name");
     localStorage.removeItem("id_User");
-    fetch(process.env.REACT_APP_API_HTTP_WEBSOCKET_ADDRESS+"/logout",{
-      method:"GET",
+    fetch(process.env.REACT_APP_API_HTTP_WEBSOCKET_ADDRESS + "/logout", {
+      method: "GET",
       credentials: 'include'
     })
       .then((response) => response.json())
@@ -111,8 +111,8 @@ export const Chat = (props: any) => {
       .catch((error) => console.log("error", error));
 
   }
-  
-  
+
+
   return (
     <div className={style.mainContainer}>
       <div className={style.boxContact}>
@@ -124,22 +124,22 @@ export const Chat = (props: any) => {
             <div className={style.UserName}>{nameUser}</div>
           </div>
           <div className={style.grp_ico}>
-          <div
-            className={style.notificationBell}
-            onClick={(e) => {
-              alertNotif();
-            }}
-          >
-            <img src={notif_ico} alt="bell" className={style.icoNotif} />
-          </div>
-          <div
-            className={style.logoutIcoContainer}
-            onClick={(e) => {
-              btn_logout();
-            }}
-          >
-            <img src={logout} alt="logout" className={style.icoLogout} />
-          </div>
+            <div
+              className={style.notificationBell}
+              onClick={(e) => {
+                alertNotif();
+              }}
+            >
+              <img src={notif_ico} alt="bell" className={style.icoNotif} />
+            </div>
+            <div
+              className={style.logoutIcoContainer}
+              onClick={(e) => {
+                btn_logout();
+              }}
+            >
+              <img src={logout} alt="logout" className={style.icoLogout} />
+            </div>
           </div>
         </div>
         <div className={style.listContactContainer}>
@@ -158,7 +158,7 @@ export const Chat = (props: any) => {
         </div>
       </div>
       <div className={style.contentChat}>
-        <ContainerMessage ws={ws} historyMSG={getMessage}  Flist={getUser} />
+        <ContainerMessage ws={ws} historyMSG={getMessage} Flist={getUser} />
       </div>
     </div>
   );
