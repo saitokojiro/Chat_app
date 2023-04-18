@@ -11,6 +11,7 @@ import { useParams } from "react-router-dom";
 import { FriendList } from "./friendList";
 import { ContainerMessage } from "./chatBoxInterface/ContainerMessage";
 import { wsContext } from "../../../context/websocket";
+import MobileMenu from "./mobile_menu/mobileMenu";
 /*
 import contactList from "./contactList.json";
 import messageList from "./messageList.json";
@@ -115,6 +116,7 @@ export const Chat = (props: any) => {
 
   return (
     <div className={style.mainContainer}>
+      <MobileMenu />
       <div className={style.boxContact}>
         <div className={style.infoUser}>
           <div className={style.userID}>

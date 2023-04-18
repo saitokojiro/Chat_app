@@ -1,49 +1,58 @@
-.Main_Container{
+.Main_Container {
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
     height: 100%;
 }
-.container{
+
+.container {
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: initial;
     gap: 1rem;
 }
-.TitleName{
+
+.TitleName {
     font-weight: bold;
 }
-.inputUserName{
+
+.inputUserName {
     border: none;
     background: none;
     border-bottom: 1px solid black;
     padding-bottom: 10px;
     padding-left: 1rem;
-    font-size: 1vw;
+    font-size: clamp(1em, 1.5vw, 1.5rem);
     font-weight: bold;
 }
-.inputUserName:focus{
+
+.inputUserName:focus {
     outline: none;
 }
-.btn_connect_disable{
+
+.btn_connect_disable {
     border: none;
     background: #d0e1fd;
     border-radius: 1rem;
     height: 3rem;
 }
-.btn_connect{
+
+.btn_connect {
     border: none;
     background: #d0e1fd;
     border-radius: 1rem;
     height: 3rem;
     box-shadow: -3px 4px 10px -9px rgb(0 0 0);
 }
-.btn_connect:hover{
+
+.btn_connect:hover {
     border: none;
     background: #d0e1fd;
     border-radius: 1rem;
     height: 3rem;
     box-shadow: -7px 5px 17px -11px rgb(0 0 0 / 79%);
 }
+
+@media screen and (max-width: 64em) {}

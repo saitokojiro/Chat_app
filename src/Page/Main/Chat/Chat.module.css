@@ -162,11 +162,12 @@
     -o-border-radius: 2rem;
 }
 
-.grp_ico{
+.grp_ico {
     display: flex;
     gap: 1rem;
 }
-.icoLogout{
+
+.icoLogout {
     width: 1.5rem;
 }
 
@@ -356,15 +357,15 @@
     border-radius: 2rem;
 }
 
-.btn_CallBtn{
+.btn_CallBtn {
     background: none;
-    border:none;
+    border: none;
     filter: invert(31%) sepia(22%) saturate(318%) hue-rotate(180deg) brightness(98%) contrast(88%);
 }
 
-.btn_more{
+.btn_more {
     background: none;
-    border:none;
+    border: none;
     filter: invert(31%) sepia(22%) saturate(318%) hue-rotate(180deg) brightness(98%) contrast(88%);
 }
 
@@ -385,6 +386,7 @@
     width: 1.7rem;
     background: none;
 }
+
 .icoMore {
     width: 1.7rem;
 }
@@ -461,3 +463,23 @@
     margin-left: 1rem;
     font-size: 0.79rem;
 }
+
+
+@media screen and (max-width: 64em) {
+    .mainContainer {
+        /*display: block;*/
+        width: initial;
+    }
+
+    .boxContact {
+        display: none;
+    }
+
+    .contentChat {
+        width: 100%;
+        height: auto;
+
+    }
+}
+
+@media screen and (max-width: 34em) {}
