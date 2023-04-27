@@ -14,7 +14,7 @@ import contactList from "./../contactList.json";
 import messageList from "./../messageList.json";
 import { wsContext } from "../../../../context/websocket";
 */
-export const ContainerMessage = (props:{ws:any,historyMSG : any,Flist:any}) => {
+export const ContainerMessage = (props: { ws: any, historyMSG: any, Flist: any }) => {
   let ws = props.ws
   let parmsData: any = useParams();
   let messageList = props.historyMSG;
@@ -22,7 +22,7 @@ export const ContainerMessage = (props:{ws:any,historyMSG : any,Flist:any}) => {
   let ProContactList = props.Flist;
   const [messageState, setmessageState] = useState<ISMessage>({
     id: "",
-    sender:"",
+    sender: "",
     message: "",
     isMedia: false,
     typeMedia: "",
@@ -33,27 +33,26 @@ export const ContainerMessage = (props:{ws:any,historyMSG : any,Flist:any}) => {
   let findUser = (uid: any) => {
     return ProContactList.find((el: any) => el.id === uid);
   };
-  
-  function unEscape(htmlStr:string) {
-    htmlStr = htmlStr.replace(/&lt;/g , "<");	 
-    htmlStr = htmlStr.replace(/&gt;/g , ">");     
+
+  function unEscape(htmlStr: string) {
+    htmlStr = htmlStr.replace(/&lt;/g, "<");
+    htmlStr = htmlStr.replace(/&gt;/g, ">");
     //htmlStr = htmlStr.replace(/&quot;/g , "\"");  
     //htmlStr = htmlStr.replace(/&#39;/g , "\'");   
-    htmlStr = htmlStr.replace(/&amp;/g , "&");
+    htmlStr = htmlStr.replace(/&amp;/g, "&");
     return htmlStr;
-}
+  }
 
   let ShowMessage = (props: any) => {
     let userId: any = localStorage.getItem("c_name");
-    let convertUserId:any = userId;
+    let convertUserId: any = userId;
 
     // eslint-disable-next-line array-callback-return
-    let data: any = messageList.map((el: any, key: any)=>{
+    let data: any = messageList.map((el: any, key: any) => {
       console.log(el.sender)
       console.log(convertUserId)
       let messageUnEscape = unEscape(el.message)
-      if(parmsData.id === el.id)
-      {
+      if (parmsData.id === el.id) {
         if (el?.sender === convertUserId) {
           return (
             <div key={key}>
@@ -74,7 +73,7 @@ export const ContainerMessage = (props:{ws:any,historyMSG : any,Flist:any}) => {
           );
         }
       }
-      
+
     });
     return data;
   };
@@ -93,7 +92,7 @@ export const ContainerMessage = (props:{ws:any,historyMSG : any,Flist:any}) => {
 
   interface ISMessage {
     id: any;
-    sender : any;
+    sender: any;
     message: string;
     isMedia: boolean;
     typeMedia: any;
@@ -104,7 +103,7 @@ export const ContainerMessage = (props:{ws:any,historyMSG : any,Flist:any}) => {
   let userid: any = localStorage.getItem("id_User");
   //let useridConver: Number = parseInt(userid);
   //console.log(userid)
-  let useridConver:any = userid;
+  let useridConver: any = userid;
   //console.log(useridConver);
   let templateMessage: any = (msg: ISMessage) => {
     let idMessage: any = parmsData.id;
@@ -113,7 +112,7 @@ export const ContainerMessage = (props:{ws:any,historyMSG : any,Flist:any}) => {
     let template = {
       type: "private message",
       to: idMsgConv,
-      sender: idMsgConv,
+      sender: useridConver,
       id: useridConver,
       message: msg.message,
       isMedia: msg.isMedia,
@@ -142,7 +141,7 @@ export const ContainerMessage = (props:{ws:any,historyMSG : any,Flist:any}) => {
       ws.send(JSON.stringify(templateMessage(messageState)));
       setmessageState({
         id: "",
-        sender:"",
+        sender: "",
         message: "",
         isMedia: false,
         typeMedia: null,
@@ -155,12 +154,12 @@ export const ContainerMessage = (props:{ws:any,historyMSG : any,Flist:any}) => {
   let handleChange = (event: any) => {
     let data: any = localStorage.getItem("c_name");
     let dateTime = new Date();
-     
+
     let convert = data;
 
     setmessageState({
       id: parmsData.id,
-      sender:convert,
+      sender: convert,
       message: event.target.value,
       isMedia: false,
       typeMedia: null,
@@ -172,9 +171,9 @@ export const ContainerMessage = (props:{ws:any,historyMSG : any,Flist:any}) => {
   let soonMessage = () => {
     alert("soon");
   };
-//console.log("----------")
-//console.log(userId?.name)
-//console.log("----------")
+  //console.log("----------")
+  //console.log(userId?.name)
+  //console.log("----------")
   return (
     <div className={style.ChatBox}>
       <div className={style.headerChat}>
@@ -186,10 +185,10 @@ export const ContainerMessage = (props:{ws:any,historyMSG : any,Flist:any}) => {
             <div>{userId?.name}</div>
             {/*<div>NameData</div>*/}
           </div>
-          
+
           <div className={style.headerIcoUser}>
-            <button className={style.btn_CallBtn} onClick={(e)=>{soonMessage()}}><img src={phone_ico} alt="" className={style.icoCall}/></button>
-            <button className={style.btn_more} onClick={(e)=>{soonMessage()}}><img src={threedote} alt="" className={style.icoMore}/></button>
+            <button className={style.btn_CallBtn} onClick={(e) => { soonMessage() }}><img src={phone_ico} alt="" className={style.icoCall} /></button>
+            <button className={style.btn_more} onClick={(e) => { soonMessage() }}><img src={threedote} alt="" className={style.icoMore} /></button>
           </div>
         </div>
       </div>
