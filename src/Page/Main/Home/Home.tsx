@@ -31,7 +31,7 @@ export const Home = (props: any) => {
         console.log(result)
         console.log(result.data)
         localStorage.setItem('id_User', result.data.id)
-        localStorage.setItem('c_name', result.data.User)
+        localStorage.setItem('c_name', result.data.user)
         window.location.href = window.location.origin + "/";
       })
       .catch((error) => console.log("error", error));
