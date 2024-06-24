@@ -6,11 +6,12 @@ import { Link } from "react-router-dom";
 
 
 
-export const FriendList = (props:{ws:any, Flist:any}) => {
- // let ws = props.ws
+export const FriendList = (props: { ws: any, Flist: any }) => {
+  // let ws = props.ws
   let ListFriend = props.Flist
-  
 
+
+  console.log(ListFriend)
 
   let IsSelected = (data: any, el: any) => {
     let contentData = Array.from(
@@ -22,8 +23,9 @@ export const FriendList = (props:{ws:any, Flist:any}) => {
     data.currentTarget.classList.add(style._active);
   };
 
-  let ContactFuc = () =>{
+  let ContactFuc = () => {
     let Contact: any = ListFriend.map((el: any, key: any) => {
+      console.log(el.id)
       return (
         <li
           className={style.cardItem}
@@ -43,7 +45,7 @@ export const FriendList = (props:{ws:any, Flist:any}) => {
                   <div>{el.message}</div>
                 </div>
               </div>
-  
+
               <div className={style.infoMessage}>
                 <div className={style.dataMessage}>{el.hours}</div>
                 {el.hasNotification === true && (
@@ -57,9 +59,10 @@ export const FriendList = (props:{ws:any, Flist:any}) => {
         </li>
       );
     });
+    console.log(Contact)
     return Contact
   }
-  
+
   //return Contact
   return (
     <ul className={style.listCard}>

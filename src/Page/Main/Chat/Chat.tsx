@@ -34,19 +34,19 @@ export const Chat = (props: any) => {
   //const [state, dispatch] = useReducer(reducer, usinitialState);
 
 
-  let requestGetMessage = async(userTo:string) => {
+  let requestGetMessage = async (userTo: string) => {
     console.log(typeof userTo)
     console.log(userTo)
-    if(userTo !== undefined){
-      fetch(process.env.REACT_APP_API_HTTP_WEBSOCKET_ADDRESS + "/getMessageUser?iduserto=" + userTo, {method: 'GET',credentials: 'include',})
-      .then((response) => response.json())
-      .then((result) => {
-        console.log(result)
-      })
-      .catch((error) => console.log("error", error));
+    if (userTo !== undefined) {
+      fetch(process.env.REACT_APP_API_HTTP_WEBSOCKET_ADDRESS + "/getMessageUser?iduserto=" + userTo, { method: 'GET', credentials: 'include', })
+        .then((response) => response.json())
+        .then((result) => {
+          console.log(result)
+        })
+        .catch((error) => console.log("error", error));
     }
   }
-  
+
   requestGetMessage(strData)
 
   let handlePrivateMessage = (contentJson: any) => {
@@ -79,10 +79,13 @@ export const Chat = (props: any) => {
       temporis.push(tempFriend);
       console.log(tempFriend)
       if (!getUser.find((user: any) => user.id === tempFriend.id)) {
+        console.log("ok")
         setgetUser((prevState: any) => prevState.concat(tempFriend));
       }
       return 0;
     });
+
+
   };
 
   let handleDisconnect = (contentJson: any) => {
@@ -108,8 +111,7 @@ export const Chat = (props: any) => {
 
     ws.onmessage = (event: any) => {
       let contentJson = JSON.parse(event.data);
-      //console.log(contentJson);
-      //console.log(parseInt(parmsData.id));
+      console.log(contentJson)
       handleEvent(contentJson, parmsData, getMessage, setgetMessage, getUser, setgetUser)
     };
   });

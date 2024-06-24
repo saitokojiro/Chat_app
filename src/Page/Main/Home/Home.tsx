@@ -23,24 +23,51 @@ export const Home = (props: any) => {
   };*/
 
   let connectBtn = () => {
-    if(userName !== ""){
+    if (userName !== "") {
+      console.log(userName)
       console.log(process.env.REACT_APP_API_HTTP_WEBSOCKET_ADDRESS)
-      fetch(process.env.REACT_APP_API_HTTP_WEBSOCKET_ADDRESS+"/connection?user="+userName, {method: 'POST',credentials: 'include',})
-      .then((response) => response.json())
-      .then((result) => {
-        console.log(result)
-        console.log(result.data)
-        localStorage.setItem('id_User', result.data.id)
-        localStorage.setItem('c_name', result.data.user)
-        window.location.href = window.location.origin + "/";
+      /*fetch("http://127.0.0.1:3987" + "/connection?user=" + userName, {
+        method: 'POST',
+        credentials: "same-origin",
+        mode: "no-cors",
       })
-      .catch((error) => console.log("error", error));
-    }else{
+*/
+
+      fetch("http://127.0.0.1:3987/connection?user=" + userName, {
+        //  method: "cors",
+        method: "POST",
+        credentials: "include",
+        headers: {
+          "Content-type": "application/json; charset=UTF-8"
+        }
+      })
+
+        .then((response) => {
+          console.log(response.ok)
+          /*if (!response.ok) {
+            throw new Error('Network response was not ok ' + response.statusText);
+          }*/
+
+          return response.json();
+        })
+        .then((result) => {
+          console.log(result)
+          console.log(result.data)
+
+          localStorage.setItem('id_User', result.data.id)
+          localStorage.setItem('c_name', result.data.user)
+          window.location.href = window.location.origin + "/";
+        })
+        .catch((error) => {
+          console.log(error)
+        });
+
+    } else {
       alert("empty")
     }
     //console.log("ok")
-   // fetch("http://127.0.0.1:3987/connection?email=valeur2", {method: 'POST',credentials: 'include',})
-    
+    // fetch("http://127.0.0.1:3987/connection?email=valeur2", {method: 'POST',credentials: 'include',})
+
 
   };
 
