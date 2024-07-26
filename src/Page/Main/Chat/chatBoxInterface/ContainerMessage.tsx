@@ -14,7 +14,7 @@ import contactList from "./../contactList.json";
 import messageList from "./../messageList.json";
 import { wsContext } from "../../../../context/websocket";
 */
-export const ContainerMessage = (props: { ws: any, historyMSG: any, Flist: any }) => {
+export const ContainerMessage = (props: { ws: any, historyMSG: any, Flist: any, typing: any }) => {
   let ws = props.ws
   let parmsData: any = useParams();
   let messageList = props.historyMSG;
@@ -155,6 +155,12 @@ export const ContainerMessage = (props: { ws: any, historyMSG: any, Flist: any }
     let data: any = localStorage.getItem("c_name");
     let dateTime = new Date();
 
+    let userid: any = localStorage.getItem("id_User");
+    let useridConver: any = userid;
+
+    let idMessage: any = parmsData.id;
+    let idMsgConv = idMessage;
+
     let convert = data;
 
     setmessageState({
@@ -166,7 +172,17 @@ export const ContainerMessage = (props: { ws: any, historyMSG: any, Flist: any }
       media: "",
       date: dateTime.toLocaleString()
     });
+    let typeTemp = {
+      id: "type",
+      type: "typing",
+      to: idMsgConv,
+      sender: useridConver
+    }
+
+
+    ws.send(JSON.stringify(typeTemp));
   };
+
 
   let soonMessage = () => {
     alert("soon");
@@ -195,6 +211,7 @@ export const ContainerMessage = (props: { ws: any, historyMSG: any, Flist: any }
       <div className={style.messageContent}>
         <ShowMessage id={"129074"} />
       </div>
+      <props.typing />
       <div className={style.inputMessage}>
         <button className={style.btn_radius + " " + style.btn_bg + " " + style.btn_pin} onClick={soonMessage}>
           <img src={pin_ico} alt="send_btn" className={style.icoPin} />

@@ -5,14 +5,32 @@
     align-items: center;
     height: 100%;
 }
-
+.popRegister,
 .container {
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: initial;
     gap: 1rem;
+    width: clamp(240px, 34vw, 350px)
 }
+
+.popRegister.cLogin{
+    display: none;
+}
+.container.cForm{
+    display: none;
+}
+
+
+.popRegister > .TitleName{
+    font-size: clamp(32px, 14vw, 50px);
+    background: linear-gradient(115deg, rgba(179, 0, 255, 1) 0%, rgb(121 57 145) 49%, rgb(102 3 141) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+
 
 .TitleName {
     font-weight: bold;
@@ -27,6 +45,7 @@
     font-size: clamp(1em, 1.5vw, 1.5rem);
     font-weight: bold;
 }
+
 
 .inputUserName:focus {
     outline: none;

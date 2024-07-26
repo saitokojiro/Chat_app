@@ -26,10 +26,11 @@ export const FriendList = (props: { ws: any, Flist: any }) => {
   let ContactFuc = () => {
     let Contact: any = ListFriend.map((el: any, key: any) => {
       console.log(el.id)
+      console.log(key)
       return (
         <li
           className={style.cardItem}
-          key={key}
+
           onClick={(e) => {
             IsSelected(e, el);
           }}

@@ -1,7 +1,80 @@
-.mainContainer {
-    height: 95vh;
-    background: #E3EAF6;
+/*Animation Typing*/
+.Typing{
+    background:rgba(255, 255, 255, 0);
     display: flex;
+    width: 64px;
+    height:32px;
+    justify-content:center;
+    align-items:center;
+    gap:5px
+  }
+  .c{
+    background:rgb(175, 182, 196);
+    width: 12px;
+    height:12px;
+    border-radius:64px;
+    scale:0
+    
+  }
+  .c:nth-child(1){
+    animation: Animation 1.5s infinite linear;
+    animation-delay: 0.0s;
+  }
+  .c:nth-child(2){
+    animation: Animation 1.5s infinite linear;
+    animation-delay: 0.25s;
+  }
+  .c:nth-child(3){
+    animation: Animation 1.5s infinite linear;
+    animation-delay: 0.5s;
+  }
+  @keyframes Animation{
+    0% {
+      scale : 0
+    }
+    50%{
+       scale : 1
+    }
+    100%{
+       scale : 0
+    }
+  }
+
+  .MO{
+    display: flex !important;
+  }
+  .MC{
+    display: none !important;
+  }
+  .menu::after{
+    position: absolute;
+    content: "≡";
+    font-size: 32px;
+    left: 15px;
+  }
+/*End Animation Typing*/
+.mainContainer {
+    height: 100%;
+    /*background: #E3EAF6;*/
+    display: flex;
+    flex-direction: column;
+    box-sizing: border-box;
+    padding: 16px;
+}
+
+.headerUser{
+    width: 100%;
+
+}
+.boxContainer{
+    position: relative;
+    display: flex;
+    width: 100%;
+    box-sizing: border-box;
+    height: 100%;
+    max-height: calc(100vh - 94px);
+    border-radius: 16px;
+    overflow: hidden;
 }
 
 .boxContact {
@@ -15,15 +88,17 @@
 }
 
 .infoUser {
-    height: 4rem;
+    height: 46px;
     /*width: 100%;*/
     /*background: gray;*/
     display: flex;
     justify-content: space-between;
     align-items: center;
-    width: 21rem;
-    margin-left: 1rem;
-    padding: 0.5rem;
+   /* width: 21rem;*/
+    /*margin-left: 1rem;*/
+    padding-bottom: 16px;
+    padding-left: 16px;
+    padding-right: 16px;
 
 }
 
@@ -47,25 +122,18 @@
 
 
 .listContactContainer {
-    /* background: rgb(255, 255, 255);*/
-    /*width: 100%;*/
-    /*height: 100%;*/
     display: flex;
     justify-content: center;
     align-items: center;
-    /*margin-left: 1.2rem;*/
+    height: 100%;
 
 }
 
 .listContactBox {
-    background: rgb(255, 255, 255);
-    width: 22rem;
-    height: 85vh;
-    border-radius: 1rem;
-    -webkit-border-radius: 1rem;
-    -moz-border-radius: 1rem;
-    -ms-border-radius: 1rem;
-    -o-border-radius: 1rem;
+    /*background: rgb(255, 255, 255);*/
+    background-color: rgb(227 234 246);
+    width: 100%;
+    height: 100%;
     display: flex;
     flex-direction: column;
 }
@@ -85,6 +153,7 @@
     background: #dfdfdf;
     border: none;
     padding-left: 1rem;
+    display: none;
 }
 
 .searchBar:focus {
@@ -93,7 +162,7 @@
 
 .listContact {
     margin-top: 1rem;
-    height: 78vh;
+    
     /*background: beige;*/
     /*border-radius: 1rem;*/
     overflow-y: auto;
@@ -208,7 +277,9 @@
 */
 
 .contentChat {
-    width: 80%;
+    width: 100%;
+    background: white;
+    overflow: hidden;
 }
 
 .ChatBox {
@@ -217,6 +288,8 @@
     justify-content: space-between;
     align-items: center;
     height: 100%;
+    padding: 16px 0;
+    box-sizing: border-box;
 }
 
 .headerChat {
@@ -225,21 +298,20 @@
     /*justify-content: center;
     align-items: center;
     /* background: #ced2d9; */
-    width: 90%;
+    width: 100%;
 }
 
 .headerChatInfo {
     display: flex;
     width: 100%;
     justify-content: space-between;
-    background: #ced2d9;
+   /* background: #ced2d9;*/
     height: 4rem;
     border-radius: 0.5rem;
     -webkit-border-radius: 0.5rem;
     -moz-border-radius: 0.5rem;
     -ms-border-radius: 0.5rem;
     -o-border-radius: 0.5rem;
-    margin-top: 0.4rem;
 }
 
 .headerNameUser {
@@ -265,10 +337,22 @@
     height: 100%;
     width: 92%;
     /*background: #bbd2fa;*/
-    padding-top: 1rem;
+    padding-top: 16px;
+    padding-bottom: 16px;
     overflow: auto;
 }
+/*#region*/
+.messageContent::-webkit-scrollbar{
+    width: 10px;
+}
+.messageContent::-webkit-scrollbar-track{
 
+}
+.messageContent::-webkit-scrollbar-thumb{
+    border-radius: 16px;
+    background: rgb(176, 175, 175);
+}
+/*#endregion*/
 .inputMessage {
     /*margin-bottom: 2rem;*/
     /*background: burlywood;*/
@@ -288,6 +372,7 @@
 
 .inputBox {
     width: 85%;
+    
     /*height: 2.1rem;*/
 }
 
@@ -304,6 +389,7 @@
     /* padding: 1rem; */
     width: 98%;
     border: none;
+    background-color: #dfdfdf;
 }
 
 .inputBarre:focus {
@@ -383,12 +469,12 @@
 }
 
 .icoCall {
-    width: 1.7rem;
+    width: 20px;
     background: none;
 }
 
 .icoMore {
-    width: 1.7rem;
+    width: 20px;
 }
 
 /*############################*/
@@ -472,7 +558,7 @@
     }
 
     .boxContact {
-        display: none;
+        /*display: none;*/
     }
 
     .contentChat {

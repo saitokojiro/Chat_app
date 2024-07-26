@@ -25,12 +25,16 @@ export const Chat = (props: any) => {
   let parmsData: any = useParams();
   let ParamUrl = parmsData.id
   let strData = ParamUrl
+  let timerTypingId: any;
 
   let nameUser = localStorage.getItem("c_name");
 
 
   const [getMessage, setgetMessage] = useState<any>([]);
   const [getUser, setgetUser] = useState<any>([]);
+
+  const [getTyping, setGetTyping] = useState<any>();
+  const [getMenu, setgetMenu] = useState<any>(style.MC);
   //const [state, dispatch] = useReducer(reducer, usinitialState);
 
 
@@ -89,13 +93,13 @@ export const Chat = (props: any) => {
   };
 
   let handleDisconnect = (contentJson: any) => {
-    setgetUser((prevState: any) => prevState.filter((user: any) => contentJson.list.some((userId: any) => user.id === userId.user)));
+    setgetUser((prevState: any) => prevState.filter((user: any) => contentJson.list.some((userId: any) => user.id === userId.id_User)));
   };
 
   const handlers: any = {
     "private message": handlePrivateMessage,
-    userlist: handleUserList,
-    disconnect: handleDisconnect
+    "userlist": handleUserList,
+    "disconnect": handleDisconnect
   };
 
   let handleEvent = (contentJson: any, parmsData: any, getMessage: any, setgetMessage: any, getUser: any, setgetUser: any) => {
@@ -111,8 +115,23 @@ export const Chat = (props: any) => {
 
     ws.onmessage = (event: any) => {
       let contentJson = JSON.parse(event.data);
+
       console.log(contentJson)
-      handleEvent(contentJson, parmsData, getMessage, setgetMessage, getUser, setgetUser)
+
+      if (contentJson.type === "typing") {
+        let userid: any = localStorage.getItem("id_User");
+        if (contentJson.sender !== userid) {
+          clearTimeout(timerTypingId);
+          setGetTyping(true)
+          timerTypingId = setTimeout(() => {
+            setGetTyping("")
+          }, 2000)
+        }
+
+      } else {
+        console.log(contentJson)
+        handleEvent(contentJson, parmsData, getMessage, setgetMessage, getUser, setgetUser)
+      }
     };
   });
 
@@ -133,11 +152,33 @@ export const Chat = (props: any) => {
 
   }
 
+  let TypingShow = () => {
+    if (getTyping) {
+      return (
+        <span className={style.Typing}>
+          <div className={style.c}></div>
+          <div className={style.c}></div>
+          <div className={style.c}></div>
+        </span>
+      )
+    } else {
+      return (<></>)
+    }
+  }
+  let menuCustom = () => {
+    if (getMenu == style.MO) {
+      setgetMenu(style.MC)
+    } else {
+      setgetMenu(style.MO)
+    }
 
+  }
+
+  //<MobileMenu />
   return (
     <div className={style.mainContainer}>
-      <MobileMenu />
-      <div className={style.boxContact}>
+
+      <div className={style.headerUser}>
         <div className={style.infoUser}>
           <div className={style.userID}>
             <div className={style.picProfilBox}>
@@ -164,24 +205,34 @@ export const Chat = (props: any) => {
             </div>
           </div>
         </div>
-        <div className={style.listContactContainer}>
-          <div className={style.listContactBox}>
-            <div className={style.searchBox}>
-              <input type="text" className={style.searchBar} />
-            </div>
-            <div className={style.listContact}>
-              {/*<FriendList ws={ws} Flist={state.userlist} />*/}
-              <FriendList ws={ws} Flist={getUser} />
-              {/*<ul className={style.listCard}>
+      </div>
+
+      <div className={style.boxContainer}>
+        <div className={style.menu} onClick={menuCustom}>
+        </div>
+        <div className={style.boxContact + " " + getMenu}>
+          <div className={style.listContactContainer}>
+            <div className={style.listContactBox}>
+              <div className={style.searchBox}>
+                <input type="text" className={style.searchBar} />
+              </div>
+              <div className={style.listContact}>
+                {/*<FriendList ws={ws} Flist={state.userlist} />*/}
+                <FriendList ws={ws} Flist={getUser} />
+                {/*<ul className={style.listCard}>
                 <FriendList />
           </ul>*/}
+              </div>
             </div>
           </div>
         </div>
+        <div className={style.contentChat}>
+
+          <ContainerMessage ws={ws} historyMSG={getMessage} Flist={getUser} typing={TypingShow} />
+
+        </div>
       </div>
-      <div className={style.contentChat}>
-        <ContainerMessage ws={ws} historyMSG={getMessage} Flist={getUser} />
-      </div>
+
     </div>
   );
 };
