@@ -1,3 +1,17 @@
+.passwordE,
+.passwordCE,
+.emailE,
+.emailCE{
+    color: red
+}
+
+.email,
+.emailC,
+.password,
+.passwordC{
+    
+}
+
 .Main_Container {
     display: flex;
     flex-direction: column;

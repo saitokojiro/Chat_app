@@ -43,15 +43,10 @@
   .MO{
     display: flex !important;
   }
-  .MC{
-    display: none !important;
+  .menu{
+    display: none;
   }
-  .menu::after{
-    position: absolute;
-    content: "≡";
-    font-size: 32px;
-    left: 15px;
-  }
+  
 /*End Animation Typing*/
 .mainContainer {
     height: 100%;
@@ -552,6 +547,54 @@
 
 
 @media screen and (max-width: 64em) {
+    
+  .MC{
+    
+    animation-name: animationMenuBack;
+    animation-duration: 0.5s;
+    animation-fill-mode: forwards;
+  }
+  .MO{
+
+    left:-450px;
+    animation-name: animationMenu;
+    animation-duration: 0.5s;
+    animation-fill-mode: forwards;
+
+  }
+
+  @keyframes animationMenu {
+
+    0%{
+        left:-500px
+    }
+    100%{
+        left:0px;
+    }
+    
+}
+@keyframes animationMenuBack {
+
+    0%{
+        
+        left:0px
+    }
+    100%{
+        left:-500px;
+        display: none 
+    }
+    
+}
+  .menu{
+    display: initial;
+    z-index: 2;
+  }
+  .menu::after{
+    position: absolute;
+    content: "≡";
+    font-size: 32px;
+    left: 15px;
+  }
     .mainContainer {
         /*display: block;*/
         width: initial;
@@ -559,7 +602,11 @@
 
     .boxContact {
         /*display: none;*/
+        
+    position: absolute;
+    z-index: 1;
     }
+   
 
     .contentChat {
         width: 100%;
@@ -568,4 +615,8 @@
     }
 }
 
-@media screen and (max-width: 34em) {}
+@media screen and (max-width: 34em) {
+    .boxContact {
+    width: 100%;
+    }
+}

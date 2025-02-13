@@ -12,24 +12,57 @@ export const Home = (props: any) => {
   const [FormC, setFormC] = useState<string>(style.cLogin)
 
 
+
+  const [errorE, setErrorE] = useState<string>(style.email)
+  const [errorEC, setErrorEC] = useState<string>(style.emailC)
+  const [errorP, setErrorP] = useState<string>(style.password)
+  const [errorPC, setErrorPC] = useState<string>(style.passwordC)
+
+
+  let resetER = (key: number) => {
+    switch (key) {
+      case 1:
+        setErrorE(style.email)
+        break;
+      case 2:
+        setErrorEC(style.emailC)
+        break;
+      case 3:
+        setErrorP(style.password)
+        break;
+      case 4:
+        setErrorPC(style.passwordC)
+        break;
+    }
+    /*
+    setErrorE(style.email)
+    setErrorEC(style.emailC)
+    setErrorP(style.password)
+    setErrorPC(style.passwordC)*/
+  }
+
   let handleChange = (e: any) => {
     setuserName(e.target.value);
   };
   let handleChangerRegister = (e: any) => {
-    console.log(e.target.value)
+
     setuserName(e.target.value);
   }
 
   let handleEmail = (e: any) => {
+    resetER(1)
     setEmailName(e.target.value);
   }
   let handlePassword = (e: any) => {
+    resetER(3)
     setPassword(e.target.value);
   }
   let handleEmailCheck = (e: any) => {
+    resetER(2)
     setEmailNameCheck(e.target.value);
   }
   let handlePasswordCheck = (e: any) => {
+    resetER(4)
     setPasswordCheck(e.target.value);
   }
 
@@ -49,12 +82,12 @@ export const Home = (props: any) => {
   };*/
 
   let connectBtn = () => {
-    if (EmailName !== EmailNameCheck) return;
-    if (Password !== PasswordCheck) return;
-    if (userName !== "") {
+    //if (EmailName !== EmailNameCheck) return;
+    //if (Password !== PasswordCheck) return;
+    if (EmailName !== "") {
 
 
-      fetch(process.env.REACT_APP_API_HTTP_WEBSOCKET_ADDRESS + "/connection?user=" + userName, {
+      fetch(process.env.REACT_APP_API_HTTP_WEBSOCKET_ADDRESS + "/login?user=" + userName, {
         //  method: "cors",
         method: "POST",
         credentials: "include",
@@ -62,8 +95,8 @@ export const Home = (props: any) => {
           "Content-type": "application/json; charset=UTF-8"
         },
         body: JSON.stringify({
-          email: "test@test.fr",
-          pwd: "helloworld"
+          email: EmailName,
+          password: Password
         })
       })
 
@@ -72,12 +105,16 @@ export const Home = (props: any) => {
           return response.json();
         })
         .then((result) => {
-          console.log(result)
-          console.log(result.data)
+          if (!result?.error) {
+            console.log(result)
+            console.log(result.data)
 
-          localStorage.setItem('id_User', result.data.id)
-          localStorage.setItem('c_name', result.data.user)
-          window.location.href = window.location.origin + "/";
+            localStorage.setItem('id_User', result.id)
+            localStorage.setItem('c_name', result.user)
+            window.location.href = window.location.origin + "/";
+          } else {
+            console.log("error")
+          }
         })
         .catch((error) => {
           console.log(error)
@@ -92,10 +129,54 @@ export const Home = (props: any) => {
 
   let registerBtn = () => {
 
+
+    if (Password !== PasswordCheck) {
+      setErrorP(style.passwordE)
+      setErrorPC(style.passwordCE)
+      if (EmailName !== EmailNameCheck) {
+        setErrorE(style.emailE)
+        setErrorEC(style.emailCE)
+        return;
+      }
+      return;
+    }
+    if (EmailName !== EmailNameCheck) {
+      setErrorE(style.emailE)
+      setErrorEC(style.emailCE)
+
+      if (Password !== PasswordCheck) {
+        setErrorP(style.passwordE)
+        setErrorPC(style.passwordCE)
+        return
+      }
+      return;
+    }
+
+    fetch(process.env.REACT_APP_API_HTTP_WEBSOCKET_ADDRESS + "/register", {
+      //  method: "cors",
+      method: "POST",
+      credentials: "include",
+      headers: {
+        "Content-type": "application/json; charset=UTF-8"
+      },
+      body: JSON.stringify({
+        user: userName,
+        email: EmailName,
+        emailCheck: EmailNameCheck,
+        password: Password,
+        passwordCheck: PasswordCheck
+      })
+    }).then(e => e.json())
+      .then(e => {
+        console.log(e.data)
+      })
+      .catch(e => console.log(e))
+
+
   }
 
   let BtnConnect = () => {
-    if (userName !== "") {
+    if (EmailName !== "") {
       return (
         <button onClick={connectBtn} className={style.btn_connect}>
           Connect
@@ -126,8 +207,6 @@ export const Home = (props: any) => {
     }
   }
 
-
-
   let ShowRegister = () => {
     return (
       <button onClick={ToggleForm} className={style.btn_connect}>
@@ -136,6 +215,7 @@ export const Home = (props: any) => {
     )
   }
   let ShowLogin = () => {
+
     return (
       <button onClick={ToggleForm} className={style.btn_connect}>
         Login
@@ -148,9 +228,19 @@ export const Home = (props: any) => {
     if (changeForm) {
       setFormC(style.cLogin)
       setChangeForm(false)
+      setuserName("");
+      setEmailName("");
+      setEmailNameCheck("");
+      setPassword("");
+      setPasswordCheck("");
     } else {
       setFormC(style.cForm)
       setChangeForm(true)
+      setuserName("");
+      setEmailName("");
+      setEmailNameCheck("");
+      setPassword("");
+      setPasswordCheck("");
     }
   }
 
@@ -164,17 +254,18 @@ export const Home = (props: any) => {
         <span>
           Autorisé le serveur pour vous connecté : <a href="https://192.168.1.61:3987" target="_blank">Serveur</a>
         </span>
-        <input type="text" onChange={handleChange} placeholder="You r username" className={style.inputUserName} required />
+        <input type="text" onChange={handleEmail} placeholder="Email" className={style.inputUserName} required />
+        <input type="password" onChange={handlePassword} placeholder="Password" className={style.inputUserName + " " + errorP} required />
         <BtnConnect />
         <ShowRegister />
       </div>
       <div className={style.popRegister + " " + FormC}>
         <span className={style.TitleName}>Register</span>
         <input type="text" onChange={handleChangerRegister} placeholder="You'r username" className={style.inputUserName} required />
-        <input type="email" onChange={handleEmail} placeholder="Email" className={style.inputUserName + " " + style.email} required />
-        <input type="email" onChange={handleEmailCheck} placeholder="Confirm email" className={style.inputUserName + " " + style.emailC} required />
-        <input type="password" onChange={handlePassword} placeholder="Password" className={style.inputUserName + " " + style.password} required />
-        <input type="password" onChange={handlePasswordCheck} placeholder="Confirm password" className={style.inputUserName + " " + style.passwordC} required />
+        <input type="email" onChange={handleEmail} placeholder="Email" className={style.inputUserName + " " + errorE} required />
+        <input type="email" onChange={handleEmailCheck} placeholder="Confirm email" className={style.inputUserName + " " + errorEC} required />
+        <input type="password" onChange={handlePassword} placeholder="Password" className={style.inputUserName + " " + errorP} required />
+        <input type="password" onChange={handlePasswordCheck} placeholder="Confirm password" className={style.inputUserName + " " + errorPC} required />
         <BtnRegister />
         <ShowLogin />
       </div>

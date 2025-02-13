@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useLayoutEffect, useState } from "react";
 //import React, { useContext, useState, useEffect } from "react";
 import style from "./../Chat.module.css";
 import { useParams } from "react-router-dom";
@@ -14,12 +14,14 @@ import contactList from "./../contactList.json";
 import messageList from "./../messageList.json";
 import { wsContext } from "../../../../context/websocket";
 */
-export const ContainerMessage = (props: { ws: any, historyMSG: any, Flist: any, typing: any }) => {
+export const ContainerMessage = (props: { ws: any, historyMSG: any, Flist: any, typing: any, getMessage: any, updateMessage: any }) => {
   let ws = props.ws
   let parmsData: any = useParams();
   let messageList = props.historyMSG;
   const [getMessage, setgetMessage] = useState<any>([]);
   let ProContactList = props.Flist;
+  let PropsGetMessage = props.getMessage
+  let PropsSetMessage = props.updateMessage
   const [messageState, setmessageState] = useState<ISMessage>({
     id: "",
     sender: "",
@@ -44,36 +46,32 @@ export const ContainerMessage = (props: { ws: any, historyMSG: any, Flist: any, 
   }
 
   let ShowMessage = (props: any) => {
-    let userId: any = localStorage.getItem("c_name");
+    let userId: any = localStorage.getItem("id_User");
     let convertUserId: any = userId;
 
     // eslint-disable-next-line array-callback-return
     let data: any = messageList.map((el: any, key: any) => {
-      console.log(el.sender)
-      console.log(convertUserId)
       let messageUnEscape = unEscape(el.message)
-      if (parmsData.id === el.id) {
-        if (el?.sender === convertUserId) {
-          return (
-            <div key={key}>
-              <div className={style.ownMessage + " " + style.msgBox}>
-                <div className={style.msg}>{el.message}</div>
-              </div>
-              <div className={style.date}>{el.date}</div>
-            </div>
-          );
-        } else {
-          return (
-            <div key={key}>
-              <div className={style.friendMessage + " " + style.msgBox} key={key}>
-                <div className={style.msg}>{messageUnEscape}</div>
-              </div>
-              <div className={style.dateFriend}>{el.date}</div>
-            </div>
-          );
-        }
-      }
 
+      if (el?.sender == convertUserId) {
+        return (
+          <div key={key}>
+            <div className={style.ownMessage + " " + style.msgBox}>
+              <div className={style.msg}>{el.message}</div>
+            </div>
+            <div className={style.date}>{el.date}</div>
+          </div>
+        );
+      } else {
+        return (
+          <div key={key}>
+            <div className={style.friendMessage + " " + style.msgBox} key={key}>
+              <div className={style.msg}>{messageUnEscape}</div>
+            </div>
+            <div className={style.dateFriend}>{el.date}</div>
+          </div>
+        );
+      }
     });
     return data;
   };
@@ -108,7 +106,15 @@ export const ContainerMessage = (props: { ws: any, historyMSG: any, Flist: any, 
   let templateMessage: any = (msg: ISMessage) => {
     let idMessage: any = parmsData.id;
     let idMsgConv = idMessage;
-    console.log(idMsgConv);
+
+    function addZero(i: any) {
+      if (i < 10) { i = "0" + i }
+      return i;
+    }
+    let date = new Date()
+    let hour = addZero(date.getHours());
+    let minute = addZero(date.getMinutes());
+
     let template = {
       type: "private message",
       to: idMsgConv,
@@ -118,23 +124,55 @@ export const ContainerMessage = (props: { ws: any, historyMSG: any, Flist: any, 
       isMedia: msg.isMedia,
       typeMedia: msg.typeMedia,
       media: msg.media,
-      date: msg.date
+      date: hour + ':' + minute
     };
     return template;
   };
 
   let sendMessage = (event: any) => {
-    event.preventDefault();
+    if (messageState.message !== "" && messageState.message !== null) {
+      event.preventDefault();
 
-    messageList.push(messageState);
-    setgetMessage([...getMessage, messageState]);
-    ws.send(JSON.stringify(templateMessage(messageState)));
+      let template = templateMessage(messageState)
+      let tempFriendM: any = {
+        id: template.to,
+        img: template.img,
+        name: template.name,
+        message: template.message,
+        hours: template.date,
+        hasNotification: false,
+        notification: 0
+      };
+      //PropsGetMessage.set(template.to, tempFriendM)
+
+      messageList.push(messageState);
+      setgetMessage([...getMessage, messageState]);
+      ws.send(JSON.stringify(templateMessage(messageState)));
+      setmessageState({
+        id: "",
+        sender: "",
+        message: "",
+        isMedia: false,
+        typeMedia: null,
+        media: "",
+        date: ""
+      })
+    }
   };
 
   let sendInputMessage = (event: any) => {
-    if (event.key === "Enter") {
-      //console.log("ok");
+    if (event.key === "Enter" && messageState.message !== "" && messageState.message !== null) {
       event.preventDefault();
+      let template = templateMessage(messageState)
+      let tempFriendM: any = {
+        id: template.to,
+        img: template.img,
+        name: template.name,
+        message: template.message,
+        hours: template.date,
+        hasNotification: false,
+        notification: 0
+      };
 
       messageList.push(messageState);
       setgetMessage([...getMessage, messageState]);
@@ -152,25 +190,30 @@ export const ContainerMessage = (props: { ws: any, historyMSG: any, Flist: any, 
   };
 
   let handleChange = (event: any) => {
+
     let data: any = localStorage.getItem("c_name");
     let dateTime = new Date();
-
     let userid: any = localStorage.getItem("id_User");
     let useridConver: any = userid;
-
     let idMessage: any = parmsData.id;
     let idMsgConv = idMessage;
-
     let convert = data;
-
+    function addZero(i: any) {
+      if (i < 10) { i = "0" + i }
+      return i;
+    }
+    let date = new Date()
+    let hour = addZero(date.getHours());
+    let minute = addZero(date.getMinutes());
+    //date: hour + " : " + minute
     setmessageState({
       id: parmsData.id,
-      sender: convert,
+      sender: userid,
       message: event.target.value,
       isMedia: false,
       typeMedia: null,
       media: "",
-      date: dateTime.toLocaleString()
+      date: hour + ':' + minute
     });
     let typeTemp = {
       id: "type",
@@ -178,8 +221,6 @@ export const ContainerMessage = (props: { ws: any, historyMSG: any, Flist: any, 
       to: idMsgConv,
       sender: useridConver
     }
-
-
     ws.send(JSON.stringify(typeTemp));
   };
 
@@ -187,9 +228,6 @@ export const ContainerMessage = (props: { ws: any, historyMSG: any, Flist: any, 
   let soonMessage = () => {
     alert("soon");
   };
-  //console.log("----------")
-  //console.log(userId?.name)
-  //console.log("----------")
   return (
     <div className={style.ChatBox}>
       <div className={style.headerChat}>
@@ -223,7 +261,7 @@ export const ContainerMessage = (props: { ws: any, historyMSG: any, Flist: any, 
           <button className={style.btn_emote + " " + style.btn_radius + " " + style.btn_bg} onClick={soonMessage}>
             <img src={smiley_ico} alt="smiley_btn" className={style.icoSmiley} />
           </button>
-          <button className={style.btn_send + " " + style.btn_Sender + " " + style.btn_bg} onClick={sendMessage}>
+          <button className={style.btn_send + " " + style.btn_Sender + " " + style.btn_bg} onClick={sendMessage} >
             <img src={send_ico} alt="send_btn" className={style.icoSend} />
           </button>
         </div>

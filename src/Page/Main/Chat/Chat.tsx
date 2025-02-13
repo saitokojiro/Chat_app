@@ -11,11 +11,6 @@ import { useParams } from "react-router-dom";
 import { FriendList } from "./friendList";
 import { ContainerMessage } from "./chatBoxInterface/ContainerMessage";
 import { wsContext } from "../../../context/websocket";
-import MobileMenu from "./mobile_menu/mobileMenu";
-/*
-import contactList from "./contactList.json";
-import messageList from "./messageList.json";
-*/
 let alertNotif = () => {
   alert("coming soon");
 };
@@ -31,27 +26,27 @@ export const Chat = (props: any) => {
 
 
   const [getMessage, setgetMessage] = useState<any>([]);
+  const [getListMessage, setListMessage] = useState<any>([]);
   const [getUser, setgetUser] = useState<any>([]);
+  const [getUserMap, setgetUserMap] = useState<Map<string, any>>(new Map());
 
   const [getTyping, setGetTyping] = useState<any>();
   const [getMenu, setgetMenu] = useState<any>(style.MC);
   //const [state, dispatch] = useReducer(reducer, usinitialState);
 
-
   let requestGetMessage = async (userTo: string) => {
-    console.log(typeof userTo)
-    console.log(userTo)
     if (userTo !== undefined) {
       fetch(process.env.REACT_APP_API_HTTP_WEBSOCKET_ADDRESS + "/getMessageUser?iduserto=" + userTo, { method: 'GET', credentials: 'include', })
         .then((response) => response.json())
         .then((result) => {
           console.log(result)
+          //setListMessage(.. "data")
         })
         .catch((error) => console.log("error", error));
     }
   }
 
-  requestGetMessage(strData)
+  //requestGetMessage(strData)
 
   let handlePrivateMessage = (contentJson: any) => {
     if (contentJson.id === parmsData.id) {
@@ -64,13 +59,28 @@ export const Chat = (props: any) => {
         date: contentJson.date
       };
       setgetMessage((prevState: any) => prevState.concat(msgWS));
+
+      if (getUserMap.has(contentJson.id)) {
+        let getUseVal = getUserMap.get(contentJson.id)
+        let tempFriendM: any = {
+          id: getUseVal.id,
+          img: getUseVal.img,
+          name: getUseVal.name,
+          message: contentJson.message,
+          hours: contentJson.date,
+          hasNotification: false,
+          notification: 0
+        };
+
+        setgetUserMap(new Map(getUserMap).set(contentJson.id, tempFriendM))
+      }
+
     }
   };
 
   let handleUserList = (contentJson: any) => {
     let temporis: any[] = [];
     contentJson.list.some((el: any) => {
-      console.log(el)
       let tempFriend: any = {
         id: el.id_User,
         img: "https://picsum.photos/600/300",
@@ -81,10 +91,9 @@ export const Chat = (props: any) => {
         notification: 0
       };
       temporis.push(tempFriend);
-      console.log(tempFriend)
       if (!getUser.find((user: any) => user.id === tempFriend.id)) {
-        console.log("ok")
         setgetUser((prevState: any) => prevState.concat(tempFriend));
+        setgetUserMap(getUserMap?.set(el.id_User, tempFriend))
       }
       return 0;
     });
@@ -94,12 +103,38 @@ export const Chat = (props: any) => {
 
   let handleDisconnect = (contentJson: any) => {
     setgetUser((prevState: any) => prevState.filter((user: any) => contentJson.list.some((userId: any) => user.id === userId.id_User)));
+
+    if (getUserMap.has(contentJson.gb)) {
+
+      getUserMap.delete(contentJson.gb);
+    }
+
   };
+
+  let handleUpdateLastMessage = (content: any) => {
+    let contentJson = content
+    getUser.some((el: any) => {
+      if (el.id === contentJson.to) {
+        let tempFriend: any = {
+          id: el.id,
+          img: el.img,
+          name: el.name,
+          message: "vous: " + contentJson.message,
+          hours: contentJson.date,
+          hasNotification: false,
+          notification: 0
+        };
+
+        setgetUserMap(new Map(getUserMap).set(contentJson.to, tempFriend))
+      }
+    })
+  }
 
   const handlers: any = {
     "private message": handlePrivateMessage,
     "userlist": handleUserList,
-    "disconnect": handleDisconnect
+    "disconnect": handleDisconnect,
+    "updateLastMessage": handleUpdateLastMessage
   };
 
   let handleEvent = (contentJson: any, parmsData: any, getMessage: any, setgetMessage: any, getUser: any, setgetUser: any) => {
@@ -115,9 +150,6 @@ export const Chat = (props: any) => {
 
     ws.onmessage = (event: any) => {
       let contentJson = JSON.parse(event.data);
-
-      console.log(contentJson)
-
       if (contentJson.type === "typing") {
         let userid: any = localStorage.getItem("id_User");
         if (contentJson.sender !== userid) {
@@ -129,7 +161,6 @@ export const Chat = (props: any) => {
         }
 
       } else {
-        console.log(contentJson)
         handleEvent(contentJson, parmsData, getMessage, setgetMessage, getUser, setgetUser)
       }
     };
@@ -144,8 +175,8 @@ export const Chat = (props: any) => {
     })
       .then((response) => response.json())
       .then((result) => {
-        console.log(result)
-        console.log(result.redirect)
+        //console.log(result)
+        //console.log(result.redirect)
         window.location.href = window.location.origin + "/";
       })
       .catch((error) => console.log("error", error));
@@ -217,18 +248,14 @@ export const Chat = (props: any) => {
                 <input type="text" className={style.searchBar} />
               </div>
               <div className={style.listContact}>
-                {/*<FriendList ws={ws} Flist={state.userlist} />*/}
-                <FriendList ws={ws} Flist={getUser} />
-                {/*<ul className={style.listCard}>
-                <FriendList />
-          </ul>*/}
+                <FriendList ws={ws} Flist={getUser} getMessageMap={getUserMap} setMessage={setgetMessage} />
               </div>
             </div>
           </div>
         </div>
         <div className={style.contentChat}>
 
-          <ContainerMessage ws={ws} historyMSG={getMessage} Flist={getUser} typing={TypingShow} />
+          <ContainerMessage ws={ws} historyMSG={getMessage} Flist={getUser} typing={TypingShow} getMessage={null} updateMessage={null} />
 
         </div>
       </div>
