@@ -215,6 +215,10 @@
     align-items: center;
 }
 
+.nameMessageBox{
+    width: 125px;
+}
+
 .picProfil {
     width: 2.5rem;
     height: 2.5rem;
@@ -283,7 +287,7 @@
     justify-content: space-between;
     align-items: center;
     height: 100%;
-    padding: 16px 0;
+    padding: 0px 0;
     box-sizing: border-box;
 }
 
@@ -294,6 +298,7 @@
     align-items: center;
     /* background: #ced2d9; */
     width: 100%;
+    padding: 16px 0;
 }
 
 .headerChatInfo {
@@ -356,6 +361,7 @@
     align-items: center;
     width: 90%;
     gap: 1rem;
+    padding: 16px 0;
     /*height: 2rem;*/
 }
 

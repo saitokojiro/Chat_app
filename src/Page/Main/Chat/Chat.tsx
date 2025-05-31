@@ -16,6 +16,28 @@ let alertNotif = () => {
 };
 
 export const Chat = (props: any) => {
+  let name: any = localStorage.getItem("c_name")
+  let [getNwt, setNwt] = useState<boolean>(false);
+  if (!getNwt) {
+    fetch(process.env.REACT_APP_API_HTTP_WEBSOCKET_ADDRESS + "/nwt?user=" + name, { method: 'GET', credentials: 'include', })
+      .then((response) => response.json()).then((result) => {
+        console.log(result.code)
+        if (result.code === "0001" || result.code === "0002") {
+          setNwt(true)
+        } else if (result.code === "0005") {
+
+
+
+          localStorage.removeItem("c_name");
+          localStorage.removeItem("id_User");
+
+
+          window.location.href = window.location.origin + "/";
+        }
+      })
+  }
+
+
   let ws = useContext(wsContext);
   let parmsData: any = useParams();
   let ParamUrl = parmsData.id
@@ -80,21 +102,41 @@ export const Chat = (props: any) => {
 
   let handleUserList = (contentJson: any) => {
     let temporis: any[] = [];
+    console.log('userlist')
+    console.log(contentJson)
     contentJson.list.some((el: any) => {
-      let tempFriend: any = {
-        id: el.id_User,
-        img: "https://picsum.photos/600/300",
-        name: el.user,
-        message: "lorem ipsum",
-        hours: "10:20",
-        hasNotification: false,
-        notification: 0
-      };
-      temporis.push(tempFriend);
-      if (!getUser.find((user: any) => user.id === tempFriend.id)) {
-        setgetUser((prevState: any) => prevState.concat(tempFriend));
-        setgetUserMap(getUserMap?.set(el.id_User, tempFriend))
-      }
+
+      fetch(process.env.REACT_APP_API_HTTP_WEBSOCKET_ADDRESS + "/getLastMessageUser?user=" + el.id_User, {
+        method: 'GET',
+        credentials: 'include',
+        headers: {
+          "Content-Type": "application/json",
+          "Accept": "application/json, text-plain, */*",
+
+        }
+      })
+        .then(e => e.json())
+        .then(e => {
+
+          console.log(e.data.listMsg[0])
+          let isMe = el.id_User == localStorage.getItem("id_User") ? "me:" : "";
+          let tempFriend: any = {
+            id: el.id_User,
+            img: "https://picsum.photos/600/300",
+            name: el.user,
+            message: isMe + e.data?.listMsg[0].message ? e.data.listMsg[0].message : "",
+            hours: e.data?.listMsg[0].date ? e.data.listMsg[0].date : "",
+            hasNotification: el.hasNotification,
+            notification: el.notification
+          };
+          temporis.push(tempFriend);
+          if (!getUser.find((user: any) => user.id === tempFriend.id)) {
+            setgetUser((prevState: any) => prevState.concat(tempFriend));
+            setgetUserMap(getUserMap?.set(el.id_User, tempFriend))
+          }
+        })
+
+
       return 0;
     });
 
@@ -119,7 +161,7 @@ export const Chat = (props: any) => {
           id: el.id,
           img: el.img,
           name: el.name,
-          message: "vous: " + contentJson.message,
+          message: "me: " + contentJson.message,
           hours: contentJson.date,
           hasNotification: false,
           notification: 0
@@ -167,8 +209,7 @@ export const Chat = (props: any) => {
   });
 
   let btn_logout = () => {
-    localStorage.removeItem("c_name");
-    localStorage.removeItem("id_User");
+
     fetch(process.env.REACT_APP_API_HTTP_WEBSOCKET_ADDRESS + "/logout", {
       method: "GET",
       credentials: 'include'

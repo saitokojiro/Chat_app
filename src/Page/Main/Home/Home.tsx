@@ -105,6 +105,8 @@ export const Home = (props: any) => {
           return response.json();
         })
         .then((result) => {
+          
+          console.log(!result?.error)
           if (!result?.error) {
             console.log(result)
             console.log(result.data)
@@ -113,7 +115,8 @@ export const Home = (props: any) => {
             localStorage.setItem('c_name', result.user)
             window.location.href = window.location.origin + "/";
           } else {
-            console.log("error")
+            console.log("code error: " + result?.error)
+            alert("error: " + result?.error)
           }
         })
         .catch((error) => {

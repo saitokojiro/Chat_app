@@ -89,7 +89,7 @@ export const FriendList = (props: { ws: any, Flist: any, getMessageMap: any, set
                 <div className={style.picProfilBox}>
                   <img src={el.img} alt="" className={style.picProfil} />
                 </div>
-                <div>
+                <div className={style.nameMessageBox}>
                   <div>{el.name}</div>
                   {/* <div>{getUserMap.get(el.id)?.message}</div>*/}
                   <div>{getUserMap.get(el.id)?.message}</div>
