@@ -34,6 +34,13 @@ export const Chat = (props: any) => {
 
           window.location.href = window.location.origin + "/";
         }
+        else if (result.code === '0004'){
+          localStorage.removeItem("c_name");
+          localStorage.removeItem("id_User");
+
+
+          window.location.href = window.location.origin + "/";
+        }
       })
   }
 
@@ -156,8 +163,9 @@ export const Chat = (props: any) => {
   let handleUpdateLastMessage = (content: any) => {
     let contentJson = content
     getUser.some((el: any) => {
-      if (el.id === contentJson.to) {
-        let tempFriend: any = {
+      let tempFriend:any;
+      if (el.id === contentJson.to ) {
+        tempFriend = {
           id: el.id,
           img: el.img,
           name: el.name,
@@ -166,9 +174,24 @@ export const Chat = (props: any) => {
           hasNotification: false,
           notification: 0
         };
+        
 
         setgetUserMap(new Map(getUserMap).set(contentJson.to, tempFriend))
+      }else if(el.id !== contentJson.to){
+          tempFriend = {
+          id: el.id,
+          img: el.img,
+          name: el.name,
+          message: contentJson.message,
+          hours: contentJson.date,
+          hasNotification: false,
+          notification: 0
+        };
+        
+
+        setgetUserMap(new Map(getUserMap).set(contentJson.sender, tempFriend))
       }
+      //setgetUserMap(new Map(getUserMap).set(contentJson.to, tempFriend))
     })
   }
 
@@ -192,6 +215,13 @@ export const Chat = (props: any) => {
 
     ws.onmessage = (event: any) => {
       let contentJson = JSON.parse(event.data);
+      console.log(contentJson)
+      console.log(getUser)
+      //console.log(getUserMap.get(contentJson.sender).)
+      if(contentJson.type === "private message"){
+        handleUpdateLastMessage(contentJson)
+        //setgetUser({...getUser, getUser.})
+      }
       if (contentJson.type === "typing") {
         let userid: any = localStorage.getItem("id_User");
         if (contentJson.sender !== userid) {

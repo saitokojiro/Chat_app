@@ -172,6 +172,7 @@ export const Home = (props: any) => {
     }).then(e => e.json())
       .then(e => {
         console.log(e.data)
+        alert(e.data)
       })
       .catch(e => console.log(e))
 

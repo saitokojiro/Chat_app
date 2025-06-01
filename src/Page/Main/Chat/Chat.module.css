@@ -134,12 +134,16 @@
 }
 
 .searchBox {
-    margin-top: 1rem;
+    margin: 1rem 0;
+    height: 48px ;
+    display: flex;
+    justify-content: center;
+    align-items: center ;
 }
 
 .searchBar {
     height: 2rem;
-    width: 15rem;
+    width: 75%;
     border-radius: 1rem;
     -webkit-border-radius: 1rem;
     -moz-border-radius: 1rem;
@@ -148,7 +152,6 @@
     background: #dfdfdf;
     border: none;
     padding-left: 1rem;
-    display: none;
 }
 
 .searchBar:focus {
@@ -599,7 +602,8 @@
     position: absolute;
     content: "≡";
     font-size: 32px;
-    left: 15px;
+    left: 11px;
+    top: 13px
   }
     .mainContainer {
         /*display: block;*/
@@ -618,6 +622,9 @@
         width: 100%;
         height: auto;
 
+    }
+    .ChatBox{
+        padding: 0 16px;
     }
 }
 
