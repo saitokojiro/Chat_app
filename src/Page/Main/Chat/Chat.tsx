@@ -199,6 +199,8 @@ export const Chat = (props: any) => {
     "private message": handlePrivateMessage,
     "userlist": handleUserList,
     "disconnect": handleDisconnect,
+    "statusUser": null,
+    "getMessageUser":null,
     "updateLastMessage": handleUpdateLastMessage
   };
 
@@ -316,7 +318,7 @@ export const Chat = (props: any) => {
           <div className={style.listContactContainer}>
             <div className={style.listContactBox}>
               <div className={style.searchBox}>
-                <input type="text" className={style.searchBar} />
+                <input type="text" className={style.searchBar} placeholder="recherche ..." />
               </div>
               <div className={style.listContact}>
                 <FriendList ws={ws} Flist={getUser} getMessageMap={getUserMap} setMessage={setgetMessage} />
