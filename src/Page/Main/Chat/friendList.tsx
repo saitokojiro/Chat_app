@@ -73,6 +73,7 @@ export const FriendList = (props: { ws: any, Flist: any, getMessageMap: any, set
 
   let ContactFuc = () => {
     let Contact: any = ListFriend.map((el: any, key: any) => {
+      console.log(el)
 
       return (
         <li
